@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub 加速下载 · 设置</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="header">
+      <div class="title-row">
+        <h1>GitHub 加速下载</h1>
+        <span id="versionBadge" class="version-badge" title="当前扩展版本">—</span>
+      </div>
+      <p class="sub">为源码压缩包与 Release 资产链接配置加速前缀。右键菜单中的主菜单项使用「默认前缀」。</p>
+    </header>
+
+    <!-- 新增 / 编辑表单 -->
+    <section class="card">
+      <h2 id="formTitle">新增前缀</h2>
+      <div class="field">
+        <label for="urlInput">加速前缀 <span class="req">*</span></label>
+        <input id="urlInput" type="text" placeholder="https://v4.gh-proxy.org/" autocomplete="off" spellcheck="false" />
+        <p class="hint">末尾斜杠可省略，保存时会自动归一为单个「/」。</p>
+      </div>
+      <div class="field">
+        <label for="labelInput">备注名 <span class="muted">（可选）</span></label>
+        <input id="labelInput" type="text" placeholder="留空则自动取域名，如 gh-proxy.org" autocomplete="off" />
+      </div>
+      <div class="field checkbox">
+        <label><input id="defaultInput" type="checkbox" /> 设为默认前缀（用于右键主菜单项）</label>
+      </div>
+      <p id="formError" class="error" hidden></p>
+      <div class="actions">
+        <button id="saveBtn" class="btn primary" type="button">保存</button>
+        <button id="cancelBtn" class="btn ghost" type="button" hidden>取消编辑</button>
+      </div>
+    </section>
+
+    <!-- 已保存列表 -->
+    <section class="card">
+      <div class="list-head">
+        <h2>已配置前缀</h2>
+        <div class="head-actions">
+          <button id="sortBtn" class="btn ghost small" type="button" hidden>按速度排序</button>
+          <button id="testAllBtn" class="btn small" type="button" hidden>全部测速</button>
+          <button id="resetBtn" class="btn ghost small" type="button">恢复默认</button>
+        </div>
+      </div>
+
+      <div class="field speed-target">
+        <label for="speedTarget">测速目标 <span class="muted">（1–5 MB 的压缩包最准）</span></label>
+        <input id="speedTarget" type="text"
+          placeholder="https://github.com/qingjian-team/qingjian/archive/refs/tags/v0.1.4.zip"
+          spellcheck="false" />
+        <p class="hint">通过各加速前缀实际下载该文件，测出首包延迟与下载速度。首次测速会请求访问对应前缀域名的权限。</p>
+      </div>
+
+      <ul id="prefixList" class="list"></ul>
+      <p id="emptyTip" class="empty" hidden>尚未配置任何前缀，当前使用内置兜底前缀。</p>
+    </section>
+
+    <!-- 规则说明 -->
+    <section class="card">
+      <h2>生效范围</h2>
+      <ul class="rules">
+        <li><code>/{owner}/{repo}/archive/...</code> 源码 zip / tar.gz / tgz</li>
+        <li><code>/{owner}/{repo}/releases/download/...</code> Release 资产</li>
+        <li><code>/{owner}/{repo}/releases/latest/download/...</code> 最新版资产</li>
+        <li>其他普通链接不会被注入菜单项，也不影响原有行为</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>链接转换测试</h2>
+      <div class="field">
+        <label for="testInput">粘贴 GitHub 下载链接</label>
+        <input id="testInput" type="text"
+          placeholder="https://github.com/qingjian-team/qingjian/archive/refs/tags/v0.1.4.zip" spellcheck="false" />
+      </div>
+      <p class="hint">仅做本地拼接预览，不会发起请求。</p>
+      <pre id="testOutput" class="output">—</pre>
+    </section>
+
+    <!-- GitHub520 加速 IP -->
+    <section class="card">
+      <div class="list-head">
+        <h2>GitHub520 Host</h2>
+        <button id="hostsOpenBtn" class="btn small" type="button">打开 Host 列表</button>
+      </div>
+      <p class="hint">
+        在新标签页打开 GitHub520 提供的 GitHub 加速 IP（hosts 格式），地址为
+        <code id="hostsUrlPreview" class="inline-code">—</code>
+      </p>
+    </section>
+
+    <p id="saveState" class="state" role="status" aria-live="polite"></p>
+  </main>
+
+  <script src="../shared.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
